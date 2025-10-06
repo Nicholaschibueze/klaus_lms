@@ -1,7 +1,9 @@
+import { adminGetCourses } from "@/app/data/admin/admin-get-courses";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function CoursesPage(){
+export default async function CoursesPage(){
+    const data = await adminGetCourses();
     return(
 
         <>
@@ -12,7 +14,11 @@ export default function CoursesPage(){
             Create Courses
             </Link>
         </div>
-        <h1>Here you will see all of the courses</h1>
+        <div>
+            {data.map ((course) =>(
+                <p key={course.id}>{course.title}</p>
+            ))}
+        </div>
         </>
     )
 }

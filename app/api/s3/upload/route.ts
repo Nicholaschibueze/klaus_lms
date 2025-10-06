@@ -34,16 +34,16 @@ const aj = arcjet
   );
 
 export async function POST(request: Request) {
-    // const session = await requireAdmin();
+    const session = await requireAdmin();
   
   try {
-    // const decision = await aj.protect(request, {
-    //   fingerprint: session?.user.id as string,
-    // });
+    const decision = await aj.protect(request, {
+      fingerprint: session?.user.id as string,
+    });
 
-    // if (decision.isDenied()) {
-    //   return NextResponse.json({ error: "Too many requests" }, { status: 429 });
-    // }
+    if (decision.isDenied()) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
 
     const body = await request.json();
 
