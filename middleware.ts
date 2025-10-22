@@ -4,9 +4,8 @@ import { getSessionCookie } from "better-auth/cookies";
 export async function middleware(request: NextRequest) {
 	const sessionCookie = getSessionCookie(request);
 
-    // THIS IS NOT SECURE!
-    // This is the recommended approach to optimistically redirect users
-    // We recommend handling auth checks in each page/route
+	// Optimistic redirect for unauthenticated users
+	// Note: This is for UX optimization only - always verify auth in your API routes/pages
 	if (!sessionCookie) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
@@ -15,5 +14,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/admin/:path*"], // Updated to match the actual admin routes in the project
+	matcher: [
+		"/admin/:path*", // Protect all admin routes
+		"/((?!api|_next/static|_next/image|favicon.ico|login|$).*)", // Exclude public routes and assets
+	],
 };

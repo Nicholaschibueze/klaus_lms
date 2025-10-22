@@ -10,7 +10,7 @@ export default async function EditRoute({params} : {params: Params}) {
     const data = await adminGetCourse(courseId)
     return(
         <div>
-            <h1 className="text-3xl font-bold mb-8">Edit Course: <span className="text-primary underline">{data.title}</span></h1>
+            <h1 className="text-3xl font-bold mb-8">Edit Course:<span className="text-primary underline">{data.title}</span></h1>
             <Tabs defaultValue="basic-info" className="w-full">
                 <TabsList className="w-full grid grid-cols-2">
                     <TabsTrigger value="basic-info">Basic Info</TabsTrigger>

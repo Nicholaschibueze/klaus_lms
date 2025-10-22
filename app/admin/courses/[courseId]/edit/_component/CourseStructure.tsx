@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "sonner";
 
 interface iAppProps {
   data: AdminCourseSingularType;
@@ -92,15 +93,37 @@ export function CourseStructure({ data }: iAppProps) {
   }
   function handleDragEnd(event) {
     const { active, over } = event;
-
-    if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-
-        return arrayMove(items, oldIndex, newIndex);
-      });
+    if (!over || active.id === over.id) {
+      return;
     }
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    const activeType = active.data.current.type as "chapter" | "lesson";
+    const overType = over.data.current.type as "chapter" | "lesson";
+    const courseId = data.id;
+
+    if (activeType ==="chapter"){
+      let targetChapterId = null; 
+
+      if (overType === "chapter"){
+        targetChapterId = overId;
+      }else if (overType === "lesson"){
+        targetChapterId = over.data.current?.chapterId ?? null;
+         
+      }
+
+      if(!targetChapterId){
+      toast.error("Could not determine target chapter for reordering.");
+      return;
+      }
+
+      const oldIndex = items.findIndex((item) => item.id === activeId);
+      const newIndex = items.findIndex((item) => item.id === targetChapterId);
+
+     }
+
   }
 
   function toggleChapter(chapterId: string) {
