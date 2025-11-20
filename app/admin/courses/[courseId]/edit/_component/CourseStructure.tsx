@@ -91,7 +91,7 @@ export function CourseStructure({ data }: iAppProps) {
       </div>
     );
   }
-  function handleDragEnd(event) {
+  function handleDragEnd(event:) {
     const { active, over } = event;
     if (!over || active.id === over.id) {
       return;
@@ -122,9 +122,68 @@ export function CourseStructure({ data }: iAppProps) {
       const oldIndex = items.findIndex((item) => item.id === activeId);
       const newIndex = items.findIndex((item) => item.id === targetChapterId);
 
+      if (oldIndex === -1 || newIndex === -1) {
+        toast.error('Could not find chapter old/new index for reordering.');
+        return;
+      }
+
+      const reordedLocalChapter = arrayMove(items, oldIndex, newIndex);
+      const updatedChapterForState = reordedLocalChapter.map((chapter, index ) =>({
+        ...chapter,
+        order: index +1,
+      })
+    );
+
+    const previousItems = [...items];
+    setItems(updatedChapterForState);
+
+     }
+    
+
+     if(activeType === "lesson" && overType === "lesson"){
+      const chapterId = active.data.current?.chapterId;
+      const overChapterId = over.data.current?.chapterId;
+      if (!chapterId || chapterId !== overChapterId) {
+        toast.error("Lessons move between different chapter or invalid chapter Id is not allowed."); 
+        return;
+      }
+
+      const chapterIndex = items.findIndex((chapter) => chapter.id === chapterId);
+      if (chapterIndex === -1) {
+        toast.error("Could not find chapter for lessons.");
+        return;
+      }
+
+      const chapterToUpdate = items[chapterIndex];
+      
+      const oldLessonIndex = chapterToUpdate.lessons.findIndex((lesson) => lesson.id === activeId);
+      const newLessonIndex = chapterToUpdate.lessons.findIndex((lesson) => lesson.id === overId);
+
+      if(oldLessonIndex === -1 || newLessonIndex === -1){
+        toast.error("Could not find lesson for reordering.");
+        return;
+
+      }
+
+      const reordedLessons = arrayMove(chapterToUpdate.lessons, oldLessonIndex, newLessonIndex);
+      const updatedLessonsForState = reordedLessons.map((lesson, index) => ({
+        ...lesson,
+        order: index + 1,
+      }));
+      
+     const newItems = [...items];
+      newItems[chapterIndex] = {
+        ...chapterToUpdate,
+        lessons: updatedLessonsForState,
+      };
+
+      const previousItems = [...items];
+      setItems(newItems);
      }
 
-  }
+     }
+
+  
 
   function toggleChapter(chapterId: string) {
     setItems(
