@@ -91,7 +91,7 @@ export function CourseStructure({ data }: iAppProps) {
       </div>
     );
   }
-  function handleDragEnd(event:) {
+  function handleDragEnd(event) {
     const { active, over } = event;
     if (!over || active.id === over.id) {
       return;
@@ -127,8 +127,8 @@ export function CourseStructure({ data }: iAppProps) {
         return;
       }
 
-      const reordedLocalChapter = arrayMove(items, oldIndex, newIndex);
-      const updatedChapterForState = reordedLocalChapter.map((chapter, index ) =>({
+      const reordedLocalChapters = arrayMove(items, oldIndex, newIndex);
+      const updatedChapterForState = reordedLocalChapters.map((chapter, index ) =>({
         ...chapter,
         order: index +1,
       })
@@ -155,7 +155,7 @@ export function CourseStructure({ data }: iAppProps) {
       }
 
       const chapterToUpdate = items[chapterIndex];
-      
+
       const oldLessonIndex = chapterToUpdate.lessons.findIndex((lesson) => lesson.id === activeId);
       const newLessonIndex = chapterToUpdate.lessons.findIndex((lesson) => lesson.id === overId);
 
